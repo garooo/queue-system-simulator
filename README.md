@@ -24,7 +24,6 @@ launch.json
             "name": "Launch App",
             "request": "launch",
             "mainClass": "App",
-            "projectName": "queue-simulator_b33ab298"
         }
     ]
 }
