@@ -4,7 +4,9 @@
 
 .vscode content
 
-```json launch.json
+launch.json
+
+```json
 {
     // Usare IntelliSense per informazioni sui possibili attributi.
     // Al passaggio del mouse vengono visualizzate le descrizioni degli attributi esistenti.
@@ -27,6 +29,9 @@
     ]
 }
 ```
+
+settings.json
+
 ```json settings.json
 {
     "java.project.sourcePaths": ["src"],
