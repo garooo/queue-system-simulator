@@ -1,5 +1,10 @@
+import frames.SimulatorFrame;
+
+
 public class App {
     public static void main(String[] args) throws Exception {
-        System.out.println("Hello, World!");
+        SimulatorFrame f = new SimulatorFrame();
+
+        f.setHP();
     }
 }
