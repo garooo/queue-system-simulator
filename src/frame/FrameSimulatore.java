@@ -1,10 +1,10 @@
-package frames;
+package frame;
 import javax.swing.*;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
-public class SimulatorFrame extends JFrame {
-    public SimulatorFrame(){
+public class FrameSimulatore extends JFrame {
+    public FrameSimulatore(){
         super("Queue System Simulator");
     }
 
