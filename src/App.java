@@ -13,6 +13,7 @@ public class App {
         MM1 s1 = new MM1(lambda, mu);
         //Assegnato variabili
 
+        //MM1:
         System.out.println("rho = " +s1.rho());
         System.out.println("Probabilita che il sistema sia vuoto = " +s1.P0());
         System.out.println("Probabilita 10 pkt in coda = " +s1.PK(k));

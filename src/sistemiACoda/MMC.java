@@ -1,5 +1,8 @@
 package sistemiACoda;
 
+import java.lang.Math;
+import utility.Utility;
+
 public class MMC extends SistemaACoda implements SistemaStreamable{
     private int c;
 
@@ -38,5 +41,16 @@ public class MMC extends SistemaACoda implements SistemaStreamable{
 
     public double noCoda(){
         return 0;
+    }
+
+    private double probNascita(int k){
+
+      return (Math.pow(this.lambda, k)/Utility.factorial(k)) * Math.pow(Math.E, -this.lambda);
+      //Poisson function which simulates the arrivals of the pkgs
+        
+    }
+    
+    private boolean nascita(double probNascita){
+        return Math.random() < probNascita;
     }
 }
