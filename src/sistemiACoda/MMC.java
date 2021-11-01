@@ -13,37 +13,90 @@ public class MMC extends SistemaACoda{
         this.c = c;
     }
 
+    static int factorial(int n)
+    {
+        if (n == 0)
+            return 1;
+ 
+        return n * factorial(n - 1);
+    }
+
     public double rho(){
-        return 0;
+        return this.lambda/(this.c * this.mu);
     }
 
     public double P0(){
-        return 0;
+        int i = 0;
+        double sum = 0;
+        double p0= 0;
+        for(i=0; i<=this.c - 1; i++){
+            sum = ((Math.pow(this.c*this.rho(), i)/factorial(i)) + (Math.pow(this.c*this.rho(),this.c)/factorial(c)) * (1/(1-this.rho())));
+            p0 += sum;
+        }
+
+        p0 = Math.pow(p0,-1);
+
+        return p0;
     }
 
     public double PK(int k){
-        return 0;
+        if(k <= this.c){
+            return this.P0()*Math.pow(this.lambda/this.mu,k) * (1/factorial(k));
+        } 
+        else{
+            return this.P0()*Math.pow(this.lambda/this.mu,this.c) * (1/(factorial(this.c) * Math.pow(this.c, k - this.c )));
+        }
+    }
+
+
+    public double CErlang(int c, double A){ 
+        double numeratore = 0;
+        double sum = 0;
+        double denominatore = 0;
+        double pK = 0;
+        int i = 0;
+
+        numeratore = ((Math.pow(A, this.c)/factorial(c)) * (1/(1-(A/this.c))));
+
+        for(i=0;i <=this.c - 1; i++){
+            sum = ((Math.pow(A, i) / factorial(i)) + (Math.pow(A,this.c)/factorial(this.c)) * (1/(1-(A/this.c))));
+            denominatore += sum;
+        }
+
+        return pK = numeratore/ denominatore;
+    }
+
+    //Prob di essere che il pkt entra in coda
+    public double Coda(){
+        return CErlang(this.c, this.c *this.rho());
     }
 
     public double LS(){
-        return 0;
+        return ((this.c*CErlang(this.c,this.c*this.rho())/(1-this.rho()))+ this.c)*this.rho();
+    }
+
+    //Numero medio di utenti serviti
+    public double LX(){
+        return this.c * this.rho();
     }
 
     public double WS(){
-        return 0;
+        return ((this.c*CErlang(this.c,this.c*this.rho()) + this.c*(1-this.rho()))/this.c*this.mu*(1-this.rho()));
     }
 
     public double WQ(){
-        return 0;
+        return ((this.c*CErlang(this.c, this.c*this.rho()))/(this.c*this.mu*(1-this.rho())));
     }
 
     public double LQ(){
-        return 0;
+        return this.c*CErlang(this.c,this.c*this.rho())*(this.rho()/(1-this.rho()));
     }
 
-    public double noCoda(){
-        return 0;
-    }
+    /*public double noCoda(){
+        return this.P0() + this.PK(1);
+    }/*
+    //--> Need to discuss with Garo
+
 
     /* private double probNascita(int k){
 
@@ -117,5 +170,11 @@ public class MMC extends SistemaACoda{
                 iServitoreLiberoPrima = i;
 
         return iServitoreLiberoPrima;
+    }
+
+    @Override
+    public double noCoda() {
+        // TODO Auto-generated method stub
+        return 0;
     }
 }
