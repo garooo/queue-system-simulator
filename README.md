@@ -1,10 +1,12 @@
-#queue-simulator
+# queue-simulator
 
 ## Setup
 
-.vscode content
+### .vscode content
 
-launch.json
+Contenuto da inserire all'interno della dir .vscode in caso si scelga visual studio code come editor
+
+#### launch.json
 
 ```json
 {
@@ -29,9 +31,9 @@ launch.json
 }
 ```
 
-settings.json
+#### settings.json
 
-```json settings.json
+```json
 {
     "java.project.sourcePaths": ["src"],
     "java.project.outputPath": "bin"
@@ -56,3 +58,8 @@ Meanwhile, the compiled output files will be generated in the `bin` folder by de
 ## Dependency Management
 
 The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+
+
+## Librerie Richieste
+
+La libreria jfreecharts è richiesta per la creazione dei plots. Scaricare la versione 1.0.0 al link https://www.jfree.org/jfreechart/download/ ed estrarre l'archivio .tar.gz all'interno della directory lib presente sulla root del progetto.
