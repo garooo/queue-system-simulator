@@ -5,5 +5,5 @@
 bin
 
 #lib content but not lib folder
-somefolder/*
-!somefolder/.gitkeep 
+lib/*
+!lib/.gitkeep 
