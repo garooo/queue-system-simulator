@@ -2,16 +2,45 @@ package frame;
 import javax.swing.*;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.util.List;
+import java.util.Map;
 
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PiePlot;
-import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.chart.ChartPanel; 
+import org.jfree.chart.JFreeChart; 
+import org.jfree.data.xy.XYSeries; 
+import org.jfree.chart.ChartFactory; 
+import org.jfree.chart.plot.PlotOrientation; 
+import org.jfree.data.xy.XYSeriesCollection; 
+
+import sistemiACoda.MMC;
+import pacchetto.Pacchetto;
 
 public class FrameSimulatore extends JFrame {
+    private MMC dispositivoMMC;
+
     public FrameSimulatore(){
         super("Queue System Simulator");
+
+        this.dispositivoMMC = null;
+    }
+
+    private void initMMC(){
+        int lambda = 7;
+        int mu = 2;
+        int k = 10;
+
+        this.dispositivoMMC = new MMC(lambda, mu, 4);
+
+        System.out.println("** M/M/C Description ** \n");
+        System.out.println("rho = " +this.dispositivoMMC.rho());
+        System.out.println("Probabilita che il sistema sia vuoto = " +this.dispositivoMMC.P0());
+        System.out.println("Probabilita che ci siano 10 pkt in coda = " +this.dispositivoMMC.PK(k));
+        System.out.println("Numero medio di pkt nel sistema = " +this.dispositivoMMC.LS());
+        System.out.println("Numero medio di pkt in coda = " +this.dispositivoMMC.LQ());
+        System.out.println("Tempo medio in attesa nel sistema = " +this.dispositivoMMC.WS());
+        System.out.println("Tempo medio in coda = " +this.dispositivoMMC.WQ());
+        System.out.println("Numero medio di utenti serviti = " +this.dispositivoMMC.LX());
+        System.out.println("Probabilita che il pkt entra in coda = " +this.dispositivoMMC.Coda());
     }
 
     public void setHP(){
@@ -20,7 +49,9 @@ public class FrameSimulatore extends JFrame {
         this.setResizable(true);
         this.setLayout(new GridLayout(1, 1));
 
-        this.add(this.setInputParams());
+        // this.add(this.setInputParams());
+
+        this.initMMC();
 
         this.add(this.createChart());
 
@@ -51,19 +82,33 @@ public class FrameSimulatore extends JFrame {
     }
 
     private JPanel createChart(){
-        DefaultPieDataset dataSet = new DefaultPieDataset();
-        dataSet.setValue("Chrome", 29);
-        dataSet.setValue("InternetExplorer", 36);
-        dataSet.setValue("Firefox", 35);
-       
-        // based on the dataset we create the chart
-        JFreeChart pieChart = ChartFactory.createPieChart3D("test", dataSet, true, true, false);
-        PiePlot plot = (PiePlot) pieChart.getPlot();
-        plot.setStartAngle(290);
-        plot.setForegroundAlpha(0.5f);
+        // Chart dataset
+        final XYSeries mmcValues = new XYSeries( "MMC" );
 
-        // Adding chart into a chart panel
-        ChartPanel chartPanel = new ChartPanel(pieChart);
+        // Dati simulazione
+        List<Pacchetto> pacchetti = this.dispositivoMMC.simulazione(100000);
+
+        Map<Integer, Integer> chartData = Pacchetto.getDataValuesChart(pacchetti);
+
+        // Mapping da dati simulazione a dataset per il chart
+        chartData.forEach((k, v) -> {
+            mmcValues.add(k, v);
+        });
+        
+        final XYSeriesCollection dataset = new XYSeriesCollection( );
+        dataset.addSeries( mmcValues );
+
+        // Chart
+        JFreeChart xylineChart = ChartFactory.createXYLineChart(
+            "MMC Values",
+            "Dispositivi",
+            "" ,
+            dataset,
+            PlotOrientation.VERTICAL,
+            true, true, false
+        );
+
+        ChartPanel chartPanel = new ChartPanel(xylineChart);
 
         return chartPanel;
     }
