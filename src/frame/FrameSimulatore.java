@@ -10,7 +10,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.data.xy.XYSeries; 
 import org.jfree.chart.ChartFactory; 
 import org.jfree.chart.plot.PlotOrientation; 
-import org.jfree.data.xy.XYSeriesCollection; 
+import org.jfree.data.xy.XYSeriesCollection;
 
 import sistemiACoda.MMC;
 import pacchetto.Pacchetto;
@@ -24,9 +24,7 @@ public class FrameSimulatore extends JFrame {
         this.dispositivoMMC = null;
     }
 
-    private void initMMC(){
-        int lambda = 7;
-        int mu = 2;
+    private void initMMC(int lambda, int mu){
         int k = 10;
 
         this.dispositivoMMC = new MMC(lambda, mu, 4);
@@ -47,13 +45,22 @@ public class FrameSimulatore extends JFrame {
         this.setSize(800,800);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(true);
-        this.setLayout(new GridLayout(1, 1));
+        this.setLayout(new GridLayout(3, 1));
 
-        // this.add(this.setInputParams());
+        this.add(this.setInputParams());
 
-        this.initMMC();
+        JButton send = new JButton("Calcola");
 
-        this.add(this.createChart());
+        send.addActionListener((e) -> {
+            this.initMMC(7, 2);
+
+            this.add(this.createChart());
+
+            this.revalidate();
+            this.repaint();
+        });
+
+        this.add(send);
 
         this.setVisible(true);
     }
