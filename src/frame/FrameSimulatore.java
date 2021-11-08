@@ -1,5 +1,7 @@
 package frame;
 import javax.swing.*;
+
+import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.util.List;
@@ -25,42 +27,39 @@ public class FrameSimulatore extends JFrame {
     }
 
     private void initMMC(int lambda, int mu){
-        int k = 10;
-
         this.dispositivoMMC = new MMC(lambda, mu, 4);
-
-        System.out.println("** M/M/C Description ** \n");
-        System.out.println("rho = " +this.dispositivoMMC.rho());
-        System.out.println("Probabilita che il sistema sia vuoto = " +this.dispositivoMMC.P0());
-        System.out.println("Probabilita che ci siano 10 pkt in coda = " +this.dispositivoMMC.PK(k));
-        System.out.println("Numero medio di pkt nel sistema = " +this.dispositivoMMC.LS());
-        System.out.println("Numero medio di pkt in coda = " +this.dispositivoMMC.LQ());
-        System.out.println("Tempo medio in attesa nel sistema = " +this.dispositivoMMC.WS());
-        System.out.println("Tempo medio in coda = " +this.dispositivoMMC.WQ());
-        System.out.println("Numero medio di utenti serviti = " +this.dispositivoMMC.LX());
-        System.out.println("Probabilita che il pkt entra in coda = " +this.dispositivoMMC.Coda());
     }
 
     public void setHP(){
         this.setSize(800,800);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(true);
-        this.setLayout(new GridLayout(3, 1));
+        this.setLayout(new GridLayout(2, 2));
 
-        this.add(this.setInputParams());
+        this.add(this.setInputParams(), 0);
 
         JButton send = new JButton("Calcola");
+
+        this.add(send, 1);
 
         send.addActionListener((e) -> {
             this.initMMC(7, 2);
 
-            this.add(this.createChart());
+            Container currentPanel = this.getContentPane();
+
+            if(currentPanel.getComponents().length > 2){
+                currentPanel.remove(3);
+                currentPanel.remove(2);
+            }
+
+            try{
+                this.add(this.createChart(), 2);
+                this.add(this.getDispositivoDescription(2), 3);
+            } catch (Exception ex){}
 
             this.revalidate();
             this.repaint();
         });
-
-        this.add(send);
 
         this.setVisible(true);
     }
@@ -88,7 +87,10 @@ public class FrameSimulatore extends JFrame {
         return inputNumberPanel;
     }
 
-    private JPanel createChart(){
+    private JPanel createChart() throws Exception{
+        if(this.dispositivoMMC == null)
+            throw new Exception("dispositivoMMC dev'essere inizializzato");
+
         // Chart dataset
         final XYSeries mmcValues = new XYSeries( "MMC" );
 
@@ -118,5 +120,28 @@ public class FrameSimulatore extends JFrame {
         ChartPanel chartPanel = new ChartPanel(xylineChart);
 
         return chartPanel;
+    }
+
+    private JPanel getDispositivoDescription(int k) throws Exception{
+        if(this.dispositivoMMC == null)
+            throw new Exception("dispositivoMMC dev'essere inizializzato");
+
+        JPanel panel = new JPanel();
+
+        panel.setLayout(new GridLayout(10, 1));
+
+        panel.add(new JLabel("** M/M/C Description **"));
+
+        panel.add(new JLabel("rho = " + this.dispositivoMMC.rho()));
+        panel.add(new JLabel("Probabilita che il sistema sia vuoto = " +this.dispositivoMMC.P0()));
+        panel.add(new JLabel("Probabilita che ci siano 10 pkt in coda = " +this.dispositivoMMC.PK(k)));
+        panel.add(new JLabel("Numero medio di pkt nel sistema = " +this.dispositivoMMC.LS()));
+        panel.add(new JLabel("Numero medio di pkt in coda = " +this.dispositivoMMC.LQ()));
+        panel.add(new JLabel("Tempo medio in attesa nel sistema = " +this.dispositivoMMC.WS()));
+        panel.add(new JLabel("Tempo medio in coda = " +this.dispositivoMMC.WQ()));
+        panel.add(new JLabel("Numero medio di utenti serviti = " +this.dispositivoMMC.LX()));
+        panel.add(new JLabel("Probabilita che il pkt entra in coda = " +this.dispositivoMMC.Coda()));
+
+        return panel;
     }
 }
