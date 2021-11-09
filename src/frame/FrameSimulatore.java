@@ -26,8 +26,8 @@ public class FrameSimulatore extends JFrame {
         this.dispositivoMMC = null;
     }
 
-    private void initMMC(int lambda, int mu){
-        this.dispositivoMMC = new MMC(lambda, mu, 4);
+    private void initMMC(int lambda, int mu, int c){
+        this.dispositivoMMC = new MMC(lambda, mu, c);
     }
 
     public void setHP(){
@@ -43,7 +43,7 @@ public class FrameSimulatore extends JFrame {
         this.add(send, 1);
 
         send.addActionListener((e) -> {
-            this.initMMC(7, 2);
+            this.initMMC(7, 2, 4);
 
             Container currentPanel = this.getContentPane();
 
@@ -95,7 +95,7 @@ public class FrameSimulatore extends JFrame {
         final XYSeries mmcValues = new XYSeries( "MMC" );
 
         // Dati simulazione
-        List<Pacchetto> pacchetti = this.dispositivoMMC.simulazione(100000);
+        List<Pacchetto> pacchetti = this.dispositivoMMC.simulazione(5000);
 
         Map<Integer, Integer> chartData = Pacchetto.getDataValuesChart(pacchetti);
 

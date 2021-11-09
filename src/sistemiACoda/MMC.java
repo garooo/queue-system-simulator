@@ -158,6 +158,8 @@ public class MMC extends SistemaACoda{
             server[iServitoreLiberoPrima] = pacchettoCorrente.getTServ();
         }
 
+        System.out.println(lPacchetti);
+
         return lPacchetti;
     }
 
