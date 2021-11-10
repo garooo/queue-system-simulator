@@ -1,12 +1,9 @@
 package frame;
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -64,14 +61,22 @@ public class FrameSimulatore extends JFrame {
         JButton send = new JButton("Calcola");
 
         send.addActionListener((e) -> {
-            float lambda, mu;
-            int c, durata;
+            float lambda, mu, durata;
+            int c;
 
             try{
-                lambda = Float.parseFloat(this.lambdaTextField.getText());
-                mu = Float.parseFloat(this.muTextField.getText());
-                c = Integer.parseInt(this.cTextField.getText());
-                durata = Integer.parseInt(this.durataTextField.getText());
+                String lambdaStr = this.lambdaTextField.getText(), muStr = this.muTextField.getText(),
+                  cStr = this.cTextField.getText(), durataStr = this.durataTextField.getText();
+
+                lambdaStr = lambdaStr.replace(",", ".");
+                muStr = muStr.replace(",", ".");
+                cStr = cStr.replace(",", ".");
+                durataStr = durataStr.replace(",", ".");
+
+                lambda = Float.parseFloat(lambdaStr);
+                mu = Float.parseFloat(muStr);
+                c = Integer.parseInt(cStr);
+                durata = Float.parseFloat(durataStr);
             } catch (Exception ex){
                 lambda = 0;
                 mu = 0;
@@ -90,7 +95,7 @@ public class FrameSimulatore extends JFrame {
                 }
 
                 try{
-                    this.add(this.createChart(durata), 1);
+                    this.add(this.createChart((int) (durata*1000)), 1);
                     this.add(this.getDispositivoDescription(2), 2);
                 } catch (Exception ex){}
 
@@ -108,7 +113,7 @@ public class FrameSimulatore extends JFrame {
         JPanel inputNumberPanel = new JPanel();
         inputNumberPanel.setLayout(new GridLayout(2, 1));
 
-        inputNumberPanel.add(new JLabel("Arrivals Occur"));
+        inputNumberPanel.add(new JLabel("Lambda"));
         inputNumberPanel.add(this.lambdaTextField);
 
         return inputNumberPanel;
@@ -118,7 +123,7 @@ public class FrameSimulatore extends JFrame {
         JPanel inputNumberPanel = new JPanel();
         inputNumberPanel.setLayout(new GridLayout(2, 1));
 
-        inputNumberPanel.add(new JLabel("Service times"));
+        inputNumberPanel.add(new JLabel("Mu"));
         inputNumberPanel.add(this.muTextField);
 
         return inputNumberPanel;
@@ -128,7 +133,7 @@ public class FrameSimulatore extends JFrame {
         JPanel inputNumberPanel = new JPanel();
         inputNumberPanel.setLayout(new GridLayout(2, 1));
 
-        inputNumberPanel.add(new JLabel("Packages number"));
+        inputNumberPanel.add(new JLabel("Numero Servitori"));
         inputNumberPanel.add(this.cTextField);
 
         return inputNumberPanel;
@@ -138,7 +143,7 @@ public class FrameSimulatore extends JFrame {
         JPanel inputNumberPanel = new JPanel();
         inputNumberPanel.setLayout(new GridLayout(2, 1));
 
-        inputNumberPanel.add(new JLabel("Durata"));
+        inputNumberPanel.add(new JLabel("Durata (s)"));
         inputNumberPanel.add(this.durataTextField);
 
         return inputNumberPanel;
