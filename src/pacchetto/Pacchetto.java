@@ -42,8 +42,10 @@ public class Pacchetto {
 
         for(Pacchetto p : pacchetti){
             nPacchettiAIstanteT = Pacchetto.getNPacchettiAIstanteT(pacchetti, p.tArr);
-
             dataValues.put(p.tArr, nPacchettiAIstanteT);
+
+            nPacchettiAIstanteT = Pacchetto.getNPacchettiAIstanteT(pacchetti, p.tServ);
+            dataValues.put(p.tServ, nPacchettiAIstanteT);
         }
 
         return dataValues;

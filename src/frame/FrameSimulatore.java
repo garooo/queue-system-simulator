@@ -1,9 +1,12 @@
 package frame;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -18,15 +21,21 @@ import sistemiACoda.MMC;
 import pacchetto.Pacchetto;
 
 public class FrameSimulatore extends JFrame {
+    private JTextField lambdaTextField, muTextField, cTextField, durataTextField;
     private MMC dispositivoMMC;
 
     public FrameSimulatore(){
         super("Queue System Simulator");
 
+        this.lambdaTextField = new JTextField();
+        this.muTextField = new JTextField();
+        this.cTextField = new JTextField();
+        this.durataTextField = new JTextField();
+
         this.dispositivoMMC = null;
     }
 
-    private void initMMC(int lambda, int mu, int c){
+    private void initMMC(float lambda, float mu, int c){
         this.dispositivoMMC = new MMC(lambda, mu, c);
     }
 
@@ -34,60 +43,108 @@ public class FrameSimulatore extends JFrame {
         this.setSize(800,800);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(true);
-        this.setLayout(new GridLayout(2, 2));
+        this.setLayout(new FlowLayout());
 
         this.add(this.setInputParams(), 0);
-
-        JButton send = new JButton("Calcola");
-
-        this.add(send, 1);
-
-        send.addActionListener((e) -> {
-            this.initMMC(7, 2, 4);
-
-            Container currentPanel = this.getContentPane();
-
-            if(currentPanel.getComponents().length > 2){
-                currentPanel.remove(3);
-                currentPanel.remove(2);
-            }
-
-            try{
-                this.add(this.createChart(), 2);
-                this.add(this.getDispositivoDescription(2), 3);
-            } catch (Exception ex){}
-
-            this.revalidate();
-            this.repaint();
-        });
 
         this.setVisible(true);
     }
 
     private JPanel setInputParams(){
         JPanel inputParamsPanel = new JPanel();
-        FlowLayout panelLayout = new FlowLayout();
+        FlowLayout panelLayout = new FlowLayout(1, 20, 20);
 
         inputParamsPanel.setLayout(panelLayout);
 
-        inputParamsPanel.add(this.inputNumberPanel("Arrivals Occur", 0));
-        inputParamsPanel.add(this.inputNumberPanel("Service times", 0));
-        inputParamsPanel.add(this.inputNumberPanel("Packages number", 0));
+        inputParamsPanel.add(this.inputNumberPanelLambda());
+        inputParamsPanel.add(this.inputNumberPanelMu());
+        inputParamsPanel.add(this.inputNumberPanelC());
+        inputParamsPanel.add(this.inputNumberPanelTime());
+
+        JButton send = new JButton("Calcola");
+
+        send.addActionListener((e) -> {
+            float lambda, mu;
+            int c, durata;
+
+            try{
+                lambda = Float.parseFloat(this.lambdaTextField.getText());
+                mu = Float.parseFloat(this.muTextField.getText());
+                c = Integer.parseInt(this.cTextField.getText());
+                durata = Integer.parseInt(this.durataTextField.getText());
+            } catch (Exception ex){
+                lambda = 0;
+                mu = 0;
+                c = 0;
+                durata = 0;
+            }
+
+            if(lambda != 0 && mu != 0 && c != 0 && durata != 0){
+                this.initMMC(lambda, mu, c);
+
+                Container currentPanel = this.getContentPane();
+
+                if(currentPanel.getComponents().length > 1){
+                    currentPanel.remove(2);
+                    currentPanel.remove(1);
+                }
+
+                try{
+                    this.add(this.createChart(durata), 1);
+                    this.add(this.getDispositivoDescription(2), 2);
+                } catch (Exception ex){}
+
+                this.revalidate();
+                this.repaint();
+            }
+        });
+
+        inputParamsPanel.add(send);
 
         return inputParamsPanel;
     }
 
-    private JPanel inputNumberPanel(String inputLabel, float placeholder){
+    private JPanel inputNumberPanelLambda(){
         JPanel inputNumberPanel = new JPanel();
         inputNumberPanel.setLayout(new GridLayout(2, 1));
 
-        inputNumberPanel.add(new JLabel(inputLabel));
-        inputNumberPanel.add(new JTextField(Float.toString(placeholder)));
+        inputNumberPanel.add(new JLabel("Arrivals Occur"));
+        inputNumberPanel.add(this.lambdaTextField);
 
         return inputNumberPanel;
     }
 
-    private JPanel createChart() throws Exception{
+    private JPanel inputNumberPanelMu(){
+        JPanel inputNumberPanel = new JPanel();
+        inputNumberPanel.setLayout(new GridLayout(2, 1));
+
+        inputNumberPanel.add(new JLabel("Service times"));
+        inputNumberPanel.add(this.muTextField);
+
+        return inputNumberPanel;
+    }
+
+    private JPanel inputNumberPanelC(){
+        JPanel inputNumberPanel = new JPanel();
+        inputNumberPanel.setLayout(new GridLayout(2, 1));
+
+        inputNumberPanel.add(new JLabel("Packages number"));
+        inputNumberPanel.add(this.cTextField);
+
+        return inputNumberPanel;
+    }
+
+    private JPanel inputNumberPanelTime(){
+        JPanel inputNumberPanel = new JPanel();
+        inputNumberPanel.setLayout(new GridLayout(2, 1));
+
+        inputNumberPanel.add(new JLabel("Durata"));
+        inputNumberPanel.add(this.durataTextField);
+
+        return inputNumberPanel;
+    }
+
+    private JPanel createChart(int durata) throws Exception{
         if(this.dispositivoMMC == null)
             throw new Exception("dispositivoMMC dev'essere inizializzato");
 
@@ -95,7 +152,7 @@ public class FrameSimulatore extends JFrame {
         final XYSeries mmcValues = new XYSeries( "MMC" );
 
         // Dati simulazione
-        List<Pacchetto> pacchetti = this.dispositivoMMC.simulazione(5000);
+        List<Pacchetto> pacchetti = this.dispositivoMMC.simulazione(durata);
 
         Map<Integer, Integer> chartData = Pacchetto.getDataValuesChart(pacchetti);
 
@@ -110,11 +167,11 @@ public class FrameSimulatore extends JFrame {
         // Chart
         JFreeChart xylineChart = ChartFactory.createXYLineChart(
             "MMC Values",
-            "Dispositivi",
-            "" ,
+            "Millisecondi",
+            "Pacchetti nel sistema" ,
             dataset,
             PlotOrientation.VERTICAL,
-            true, true, false
+            false, true, false
         );
 
         ChartPanel chartPanel = new ChartPanel(xylineChart);
