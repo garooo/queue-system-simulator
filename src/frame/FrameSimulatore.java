@@ -159,7 +159,7 @@ public class FrameSimulatore extends JFrame {
         // Dati simulazione
         List<Pacchetto> pacchetti = this.dispositivoMMC.simulazione(durata);
 
-        Map<Integer, Integer> chartData = Pacchetto.getDataValuesChart(pacchetti);
+        Map<Float, Integer> chartData = Pacchetto.getDataValuesChart(pacchetti);
 
         // Mapping da dati simulazione a dataset per il chart
         chartData.forEach((k, v) -> {
@@ -172,7 +172,7 @@ public class FrameSimulatore extends JFrame {
         // Chart
         JFreeChart xylineChart = ChartFactory.createXYLineChart(
             "MMC Values",
-            "Millisecondi",
+            "Secondi",
             "Pacchetti nel sistema" ,
             dataset,
             PlotOrientation.VERTICAL,

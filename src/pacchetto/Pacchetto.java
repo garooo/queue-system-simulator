@@ -32,20 +32,20 @@ public class Pacchetto {
         return "Tempo arrivo: " + this.getTArr() + " Tempo entrata: " + this.getTEntrata() + " Tempo uscita: " + this.getTServ() + "\n";
     }
 
-    public static Map<Integer, Integer> getDataValuesChart(List<Pacchetto> pacchetti){
-        Map<Integer, Integer> dataValues = new HashMap<Integer, Integer>();
+    public static Map<Float, Integer> getDataValuesChart(List<Pacchetto> pacchetti){
+        Map<Float, Integer> dataValues = new HashMap<Float, Integer>();
 
         if(pacchetti.size() != 0 && pacchetti.get(0).getTArr() != 0)
-            dataValues.put(0, 0);
+            dataValues.put((float) 0, 0);
 
         int nPacchettiAIstanteT;
 
         for(Pacchetto p : pacchetti){
             nPacchettiAIstanteT = Pacchetto.getNPacchettiAIstanteT(pacchetti, p.tArr);
-            dataValues.put(p.tArr, nPacchettiAIstanteT);
+            dataValues.put(((float) p.tArr)/1000, nPacchettiAIstanteT);
 
             nPacchettiAIstanteT = Pacchetto.getNPacchettiAIstanteT(pacchetti, p.tServ);
-            dataValues.put(p.tServ, nPacchettiAIstanteT);
+            dataValues.put(((float) p.tServ)/1000, nPacchettiAIstanteT);
         }
 
         return dataValues;
