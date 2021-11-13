@@ -2,6 +2,7 @@ package frame;
 import javax.swing.*;
 
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.util.List;
@@ -49,7 +50,7 @@ public class FrameSimulatore extends JFrame {
 
     private JPanel setInputParams(){
         JPanel inputParamsPanel = new JPanel();
-        FlowLayout panelLayout = new FlowLayout(1, 20, 20);
+        FlowLayout panelLayout = new FlowLayout(FlowLayout.CENTER, 20, 20);
 
         inputParamsPanel.setLayout(panelLayout);
 
@@ -59,6 +60,7 @@ public class FrameSimulatore extends JFrame {
         inputParamsPanel.add(this.inputNumberPanelTime());
 
         JButton send = new JButton("Calcola");
+        send.setPreferredSize(new Dimension(100, 20));
 
         send.addActionListener((e) -> {
             float lambda, mu, durata;
@@ -112,6 +114,7 @@ public class FrameSimulatore extends JFrame {
     private JPanel inputNumberPanelLambda(){
         JPanel inputNumberPanel = new JPanel();
         inputNumberPanel.setLayout(new GridLayout(2, 1));
+        inputNumberPanel.setPreferredSize(new Dimension(100, 50));
 
         inputNumberPanel.add(new JLabel("Lambda"));
         inputNumberPanel.add(this.lambdaTextField);
@@ -122,6 +125,7 @@ public class FrameSimulatore extends JFrame {
     private JPanel inputNumberPanelMu(){
         JPanel inputNumberPanel = new JPanel();
         inputNumberPanel.setLayout(new GridLayout(2, 1));
+        inputNumberPanel.setPreferredSize(new Dimension(100, 50));
 
         inputNumberPanel.add(new JLabel("Mu"));
         inputNumberPanel.add(this.muTextField);
@@ -132,6 +136,7 @@ public class FrameSimulatore extends JFrame {
     private JPanel inputNumberPanelC(){
         JPanel inputNumberPanel = new JPanel();
         inputNumberPanel.setLayout(new GridLayout(2, 1));
+        inputNumberPanel.setPreferredSize(new Dimension(100, 50));
 
         inputNumberPanel.add(new JLabel("Numero Servitori"));
         inputNumberPanel.add(this.cTextField);
@@ -142,6 +147,7 @@ public class FrameSimulatore extends JFrame {
     private JPanel inputNumberPanelTime(){
         JPanel inputNumberPanel = new JPanel();
         inputNumberPanel.setLayout(new GridLayout(2, 1));
+        inputNumberPanel.setPreferredSize(new Dimension(100, 50));
 
         inputNumberPanel.add(new JLabel("Durata (s)"));
         inputNumberPanel.add(this.durataTextField);
